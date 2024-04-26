@@ -1,0 +1,31 @@
+name: Choice Parameter Workflow
+ 
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select the environment'
+        required: true
+        default: 'Test'
+        options:
+          - Test
+          - QS
+env: 
+   TOKEN: ${{secrets.TRIGGER_TOKEN}}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Set input value as environment variable
+        run: echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+ 
+      - name: Deploy to selected environment
+        run: |
+          export TOKEN
+          chmod +x trigger_workflow.sh
+          echo "Deploying to ${{ github.event.inputs.environment }} environment"
+          $GITHUB_WORKSPACE/trigger_workflow.sh
+         
