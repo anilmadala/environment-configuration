@@ -13,14 +13,14 @@ curl -X POST \
   -u "${REPO_OWNER}:${TOKEN}" \
   -H "Accept: application/vnd.github.v3+json" \
   "https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${QS_WORKFLOW_NAME}/dispatches" \
-  -d '{"ref":"master"}'
+  -d '{"ref":"main"}'
   elif [ $ENVIRONMENT = 'Test' ]; then
   echo "Running tests on Staging Environment"
   curl -X POST \
   -u "${REPO_OWNER}:${TOKEN}" \
   -H "Accept: application/vnd.github.v3+json" \
   "https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${TEST_WORKFLOW_NAME}/dispatches" \
-  -d '{"ref":"master"}'
+  -d '{"ref":"main"}'
   else 
   echo "Unspecified Environment : $ENVIRONMENT"
   exit 1
