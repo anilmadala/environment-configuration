@@ -1,9 +1,9 @@
 #!/bin/bash
  
 REPO_OWNER="anilmadala"
-REPO_NAME="injurymapping"
+REPO_NAME="environment-configuration"
 QS_WORKFLOW_NAME="QS.yml"
-TEST_WORKFLOW_NAME="reusableworkflow.yml"
+TEST_WORKFLOW_NAME="TestEnv.yml"
 #ENVIRONMENT ="$ENVIRONMENT"
 echo "Selected Envronment is: $ENVIRONMENT"
 
