@@ -1,6 +1,6 @@
 name:  TestEnv Reusable workflow 
 on:
-  workflow_dispatch:
+  workflow_dispatchadsadsfdf:
   push:
     branches: [ feature ]
 
