@@ -9,7 +9,7 @@ permissions:
 
 # Set environment variables from GitHub Secrets
 env:
-  LOIS_CLIENT_ID_QS: ${{ secrets.LOIS_CLIENT_ID_QS }}
+  LOIS_CLIENT_ID_QSEnv: ${{ secrets.LOIS_CLIENT_ID_QS }}
 
 jobs:
   job1:
