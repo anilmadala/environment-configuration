@@ -19,4 +19,4 @@ jobs:
       - name: Write something to log
         run: |
           echo "I am TEST Env Anil"
-          echo "LOIS_CLIENT_ID_QS=${{ secrets.LOIS_CLIENT_ID_QS }}"
+          echo "LOIS_CLIENT_ID_QS=${{ secrets.LOIS_CLIENT_ID_QSEnv }}"
