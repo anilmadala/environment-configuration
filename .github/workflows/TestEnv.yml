@@ -1,22 +1,22 @@
-name:  TestEnv Reusable workflow 
+name: TestEnv Reusable workflow 
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
-
+    branches: [main]
 
 permissions:
   contents: write
+
 # Set environment variables from GitHub Secrets
 env:
   LOIS_CLIENT_ID_QS: ${{ secrets.LOIS_CLIENT_ID_QS }}
-  
+
 jobs:
   job1:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name : write someting to log
+      - name: Write something to log
         run: |
-          echo "I am  TEST Env Anil"
-          echo {{LOIS_CLIENT_ID_QS}}
+          echo "I am TEST Env Anil"
+          echo "LOIS_CLIENT_ID_QS=${{ secrets.LOIS_CLIENT_ID_QS }}"
