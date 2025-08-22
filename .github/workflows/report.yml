@@ -1,0 +1,87 @@
+name: Cypress Tests
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  cypress-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install dependencies
+        run: npm ci
+      - name: Install mochawesome
+        run: npm install --save-dev mochawesome mochawesome-merge mochawesome-report-generator
+      - name: Run Cypress tests with mochawesome reporter
+        run: npx cypress run --reporter mochawesome --reporter-options reportDir=cypress/results,overwrite=true,html=false,json=true
+      - name: Generate combined report
+        if: always()
+        run: |
+          npx mochawesome-merge cypress/results/*.json -o cypress/results/output.json
+          npx marge cypress/results/output.json --reportDir cypress/results --inline
+      - name: Upload MochaAwesome JSON report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: mochaawesome-report
+          path: cypress/results/*.json
+      - name: Install jq
+        if: always()
+        run: sudo apt-get install -y jq
+      - name: Extract test results
+        if: always()  
+        id: extract_results
+        run: |
+          total_passed=$(jq '.stats.passes' cypress/results/output.json)
+          total_failed=$(jq '.stats.failures' cypress/results/output.json)
+          total_pending=$(jq '.stats.pending' cypress/results/output.json)
+          failed_cases=$(jq -r '[.results[] | .suites[].tests[] | select(.state == "failed") | .title] | join(", ")' cypress/results/output.json)
+          # Calculate total test cases (Passed + Failed + Pending)
+          total_tests=$((total_passed + total_failed + total_pending))
+          # Write values to environment file
+          echo "TOTAL_TESTS=$total_tests" >> $GITHUB_ENV
+          echo "TOTAL_PASSED=$total_passed" >> $GITHUB_ENV
+          echo "TOTAL_FAILED=$total_failed" >> $GITHUB_ENV
+          echo "TOTAL_PENDING=$total_pending" >> $GITHUB_ENV
+          echo "FAILED_CASES=$failed_cases" >> $GITHUB_ENV
+      - name: Generate test summary HTML
+        if: always()
+        id: generate_summary
+        run: |
+            echo "<table border='1' cellpadding='5' cellspacing='0'><thead><tr><th>Spec</th><th>Total_testcases</th><th>Passing</th><th>Failing</th><th>Pending</th><th>Skipped</th></tr></thead><tbody>" > cypress/results/test_summary.html
+            jq -r '.results[] | .suites[] | .tests[] | "<tr><td>\(.title)</td><td>\(.state == "passed" // 0)</td><td>\(.state == "failed" // 0)</td><td>\(.pending // 0)</td><td>\(.skipped // 0)</td></tr>"' cypress/results/output.json >> cypress/results/test_summary.html
+            echo "</tbody></table>" >> cypress/results/test_summary.html
+
+      - name: Send test results via email
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: anil.madalabca@gmail.com 
+          password: 8530244750 
+          to: qaanilmadala@gmail.com
+          from: anil.madalabca@gmail.com
+          subject: "Cypress Test Results - $(date +'%d-%m-%y')"
+          attachments: cypress/results/output.json, cypress/results/test_summary.html , cypress/results/output.html
+          body: |
+            Dear Team,
+            Here are the Cypress test results from the latest run:
+            - Total Run Testcases: ${{ env.TOTAL_TESTS }}
+            - Total Passed: ${{ env.TOTAL_PASSED }}
+            - Total Failed: ${{ env.TOTAL_FAILED }}
+            - Total Pending: ${{ env.TOTAL_PENDING }}
+            - Failed Test Cases: ${{ env.FAILED_CASES }}
+            Please check the attached report for detailed information.
+            Best regards,  
+            Your Automation Team
