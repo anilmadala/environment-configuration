@@ -30,7 +30,7 @@ jobs:
           npx marge cypress/results/output.json --reportDir cypress/results --inline
       - name: Upload MochaAwesome JSON report
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: mochaawesome-report
           path: cypress/results/*.json
