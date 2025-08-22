@@ -3,7 +3,7 @@ name: Java CI/CD
 on:
   push:
     branches:
-      - main # Change this to your main branch name
+      - main # Change this to your main branch name demo
 
 jobs:
   build:
