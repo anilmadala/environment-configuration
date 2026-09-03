@@ -1,0 +1,26 @@
+name: Deploy Environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Select environment"
+        default: 'Test'
+        required: true
+        type: choice
+        options:
+          - Test
+          - QS
+
+jobs:
+
+  run-Test:
+    if: ${{ inputs.environment == 'TEST' }}
+    uses: ./.github/workflows/TestEnv.yml
+    secrets: inherit
+
+  run-QS:
+    if: ${{ inputs.environment == 'QA' }}
+    uses: ./.github/workflows/QS.yml
+    secrets: inherit
+```
