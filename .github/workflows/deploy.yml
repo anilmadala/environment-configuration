@@ -23,4 +23,3 @@ jobs:
     if: ${{ inputs.environment == 'QA' }}
     uses: ./.github/workflows/QS.yml
     secrets: inherit
-```
