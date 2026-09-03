@@ -20,6 +20,6 @@ jobs:
     secrets: inherit
 
   run-QS:
-    if: ${{ inputs.environment == 'QA' }}
+    if: ${{ inputs.environment == 'QS' }}
     uses: ./.github/workflows/QS.yml
     secrets: inherit
