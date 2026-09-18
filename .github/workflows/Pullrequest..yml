@@ -1,0 +1,19 @@
+name: Playwright Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  push:
+    branches:
+      - main
+
+jobs:
+  pull-Requestverify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name : write someting to log
+        run: |
+          echo "I am pull request"
